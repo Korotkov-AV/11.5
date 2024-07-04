@@ -13,14 +13,31 @@
 // Sets default values
 ADefaultCharacter::ADefaultCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	//ctrl + F12
+
+
 	PrimaryActorTick.bCanEverTick = true;
+
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	SpringArm->SetupAttachment(GetRootComponent());
+	SpringArm->SetUsingAbsoluteRotation(true);
+	SpringArm->SetRelativeRotation(FRotator(YRotation, 0.0f, 0.0f));
+	SpringArm->bDoCollisionTest = false;
+	SpringArm->bEnableCameraLag = true;
+	SpringArm->TargetArmLength = ArmLength;
+
+
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm);
+	Camera->SetFieldOfView(FOV);
+	Camera->bUsePawnControlRotation = false;
+
+
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
 }
 
 // Called when the game starts or when spawned
