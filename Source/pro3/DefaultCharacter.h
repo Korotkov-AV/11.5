@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
+//#include "Math/UnrealMathUtility.h";
 #include "DefaultCharacter.generated.h"
 
 class UCameraComponent;
@@ -30,6 +32,8 @@ protected:
 	UDecalComponent *Cursor;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cursor")
 	FVector CursorSize = FVector(20.f, 40.f, 40.f);
+	float YRotation = -75.0f;
+	float FOV = 55.0f;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,6 +42,22 @@ protected:
 	void MoveRight(float Value);
 
 
+
+	void Sprint();
+	void StopSprint();
+
+	bool dIsSprint =false;
+	//UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	float minusStamina = -1.0f;
+	//UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	float plusStamina = 1.0f;
+	//UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	float stamina = 1000.0f;
+
+	void decreaseStamina();
+	void increaseStamina();
+
+	void RotationPlayerOnCursor();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -45,4 +65,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintPure)
+	bool GetIsSprint() const { return dIsSprint; }
 };
