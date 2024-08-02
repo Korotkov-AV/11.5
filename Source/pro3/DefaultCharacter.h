@@ -6,11 +6,13 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 //#include "Math/UnrealMathUtility.h";
+#include "pro3WeaponComponent.h"
 #include "DefaultCharacter.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
 class UDecalComponent;
+class Upro3WeaponComponent;
 
 UCLASS()
 class PRO3_API ADefaultCharacter : public ACharacter
@@ -22,6 +24,8 @@ public:
 	ADefaultCharacter();
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Component")
+	Upro3WeaponComponent* WeaponComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category ="Component")
 	UCameraComponent *Camera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Component")
@@ -40,19 +44,18 @@ protected:
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
-
-
+	void MouseWheel(float Value);
 
 	void Sprint();
 	void StopSprint();
 
-	bool dIsSprint =false;
+	bool dIsSprint = false;
 	//UPROPERTY(EditDefaultsOnly, Category = "Stamina")
-	float minusStamina = -1.0f;
+	float minusStamina = -10.0f;
 	//UPROPERTY(EditDefaultsOnly, Category = "Stamina")
-	float plusStamina = 1.0f;
+	float plusStamina = 10.0f;
 	//UPROPERTY(EditDefaultsOnly, Category = "Stamina")
-	float stamina = 1000.0f;
+	float stamina = 500.0f;
 
 	void decreaseStamina();
 	void increaseStamina();

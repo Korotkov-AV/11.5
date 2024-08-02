@@ -17,6 +17,7 @@ ADefaultCharacter::ADefaultCharacter()
 	//Using Ctrl + Shift + B (vs code)
 
 	PrimaryActorTick.bCanEverTick = true;
+	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	SpringArm->SetupAttachment(GetRootComponent());
@@ -34,6 +35,8 @@ ADefaultCharacter::ADefaultCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	WeaponComponent = CreateDefaultSubobject<Upro3WeaponComponent>("Weapon");
 }
 
 // Called when the game starts or when spawned
@@ -57,6 +60,14 @@ void ADefaultCharacter::MoveRight(float Value)
 	AddMovementInput(GetActorRightVector(), Value);
 }
 
+void ADefaultCharacter::MouseWheel(float Value)
+{
+	if (Value > 0 && SpringArm->TargetArmLength > 300)
+		SpringArm->TargetArmLength-=100;
+	if (Value < 0 && SpringArm->TargetArmLength < 2000)
+		SpringArm->TargetArmLength += 100;
+}
+
 void ADefaultCharacter::Sprint()
 {
 	dIsSprint = true;
@@ -71,7 +82,7 @@ void ADefaultCharacter::StopSprint()
 
 void ADefaultCharacter::decreaseStamina()
 {
-	stamina -= minusStamina;
+	stamina += minusStamina;
 }
 
 void ADefaultCharacter::increaseStamina()
@@ -84,13 +95,14 @@ void ADefaultCharacter::increaseStamina()
 void ADefaultCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	//UE_LOG(LogTemp, Warning, TEXT("%f"), stamina);
 
 	RotationPlayerOnCursor();
 
 	if (dIsSprint && stamina > 0.0f) {
 		decreaseStamina();
 	}
-	if (!dIsSprint && stamina < 1000.0f) {
+	if (!dIsSprint && stamina < 500.0f) {
 		increaseStamina();
 	}
 	if (FMath::IsNearlyZero(stamina)) {
@@ -105,6 +117,8 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ADefaultCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ADefaultCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MouseWheel", this, &ADefaultCharacter::MouseWheel);
+
 
 
 	PlayerInputComponent->BindAction("sprint",IE_Pressed, this, &ADefaultCharacter::Sprint);
