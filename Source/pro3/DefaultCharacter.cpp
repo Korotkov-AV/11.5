@@ -23,7 +23,7 @@ ADefaultCharacter::ADefaultCharacter()
 	SpringArm->SetupAttachment(GetRootComponent());
 	SpringArm->SetUsingAbsoluteRotation(true);
 	SpringArm->TargetArmLength = 1400;
-	//SpringArm->SetRelativeRotation(FRotator(YRotation, 0.0f, 0.0f));
+	SpringArm->SetRelativeRotation(FRotator(YRotation, 0.0f, 0.0f));
 	SpringArm->bDoCollisionTest = false;
 	SpringArm->bEnableCameraLag = true;
 
@@ -119,12 +119,12 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("MoveRight", this, &ADefaultCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("MouseWheel", this, &ADefaultCharacter::MouseWheel);
 
-
-
 	PlayerInputComponent->BindAction("sprint",IE_Pressed, this, &ADefaultCharacter::Sprint);
 	PlayerInputComponent->BindAction("sprint",IE_Released, this, &ADefaultCharacter::StopSprint);
 
-
+	PlayerInputComponent->BindAction("fire", IE_Pressed, WeaponComponent, &Upro3WeaponComponent::StartFire);
+	PlayerInputComponent->BindAction("fire", IE_Released, WeaponComponent, &Upro3WeaponComponent::StopFire);
+	PlayerInputComponent->BindAction("reload", IE_Pressed, WeaponComponent, &Upro3WeaponComponent::Reload);
 }
 
 void ADefaultCharacter::RotationPlayerOnCursor()
